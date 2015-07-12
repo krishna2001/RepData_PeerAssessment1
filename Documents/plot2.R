@@ -1,0 +1,11 @@
+data<-data.frame()
+data<-read.table("household_power_consumption.txt", sep=";", dec=".", header=TRUE, na="?", colClasses=(c("character", "character", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric")))
+smalldata<-data.frame()
+smalldata<-subset(data, data$Date=="1/2/2007" | data$Date=="2/2/2007")
+smalldata<-transform(smalldata, DateTime=paste(Date, Time, sep=" "))
+newsmalldata<-data.frame()
+newsmalldata<-smalldata[,!(names(smalldata) %in% c("Date", "Time"))]
+newsmalldata$DateTime<-strptime(newsmalldata$DateTime, "%d/%m/%Y %H:%M:%S")
+plot(newsmalldata$DateTime, newsmalldata$Global_active_power, type="l", xlab="", ylab="Global Active Power (kilowatts)")
+dev.copy(png, file="plot2.png", width=480, height=480)
+dev.off()
